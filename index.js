@@ -3,8 +3,9 @@ const cors = require('cors');
 require('dotenv').config();
 const express = require('express');
 const app = express()
-app.use(cors());
 const port = process.env.PORT || 8000;
+app.use(cors());
+app.use(express.json())
 
 //user name:basic-crud-server
 //password:Cg7ScdbL5TryZWIk
@@ -34,7 +35,9 @@ const client = new MongoClient(process.env.DB_URI);
     
     // findOne---------------------------
     app.get('/products/:productId', async(req, res)=>{
+      
       const productId = req.params.productId;
+                 
 
       const query = {_id: new ObjectId(productId)}
       // console.log("query",query);
@@ -45,7 +48,15 @@ const client = new MongoClient(process.env.DB_URI);
     })
 
 
-    
+
+     // Post------------------------------------
+       app.post("/products",async (req, res)=>{
+        // add products 
+        const newProduct = req.body;
+        const result = await productsCollection.insertOne(newProduct);
+        console.log(result)
+        res.send(result)
+       })
 
 
 
